@@ -1,9 +1,9 @@
 package tasks;
 
 import common.Person;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /*
 Задача 2
@@ -16,6 +16,21 @@ public class Task2 {
   public static List<Person> combineAndSortWithLimit(Collection<Person> persons1,
                                                      Collection<Person> persons2,
                                                      int limit) {
-    return new ArrayList<>();
+
+    Collection<Person> persons = new HashSet<>();
+    persons.addAll(persons1);
+    persons.addAll(persons2);
+
+    List<Person> sortedLimitPersons = persons.stream()
+        .sorted(Comparator.comparing(Person::createdAt))
+        .limit(limit)
+        .toList();
+
+    /*
+     это задание я сделал первым, так как в java я - 0, а подобные штуки я решал на ваших любимых плюсах,
+     только во время выполнения задания дошло, что можно использовать стримы и они очень удобные
+     дополнение: на обычных задачах (в одно два действия)
+    */
+    return sortedLimitPersons;
   }
 }

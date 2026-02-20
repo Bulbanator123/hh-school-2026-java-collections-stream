@@ -2,9 +2,8 @@ package tasks;
 
 import common.Person;
 import common.PersonService;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 
 /*
 Задача 1
@@ -23,6 +22,27 @@ public class Task1 {
 
   public List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = personService.findPersons(personIds);
-    return Collections.emptyList();
+
+    Map<Integer, Person> personSort = new HashMap<>();;
+
+    for (var per : persons) {
+      personSort.put(per.id(), per);
+    }
+
+    List<Person> personList = personIds.stream().
+        map(personSort::get)
+        .toList();
+
+    return personList;
+
+    /*
+       И наконец-то асимптотика
+       Пусть n - длина persons, m - длина personIds, тогда Сложность O(n + m)
+       первый проход записываем в мап O(n), вторым вытаскиваем из мапа O(1) и идём так O(m)
+       Просто на всякий, если мы добавляем к этому полноценный findPersons а не вывод из return,
+       то скорее всего это ещё + log(n)
+     */
+
+    // честно я очень долго думал, что здесь вообще надо сделать
   }
 }
