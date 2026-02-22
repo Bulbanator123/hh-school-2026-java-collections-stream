@@ -1,11 +1,10 @@
 package tasks;
 
+import common.ApiPersonDto;
 import common.Area;
 import common.Person;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 
 /*
 Имеются
@@ -19,6 +18,19 @@ public class Task6 {
   public static Set<String> getPersonDescriptions(Collection<Person> persons,
                                                   Map<Integer, Set<Integer>> personAreaIds,
                                                   Collection<Area> areas) {
-    return new HashSet<>();
+    Map<Integer, String> areaMapa = new HashMap<>();
+    for (var area : areas) {
+      areaMapa.put(area.getId(), area.getName());
+    }
+
+    Set<String> personDescribe = new HashSet<>();
+    for (var per : persons) {
+      var perAreasIds = personAreaIds.get(per.id());
+      for (var areaId : perAreasIds) {
+        personDescribe.add(per.firstName() + " - " + areaMapa.get(areaId));
+      }
+    }
+
+    return personDescribe;
   }
 }
