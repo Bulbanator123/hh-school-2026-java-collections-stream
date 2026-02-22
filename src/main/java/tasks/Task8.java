@@ -6,7 +6,6 @@ import common.PersonWithResumes;
 import common.Resume;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /*
@@ -24,35 +23,21 @@ public class Task8 {
 
   public Set<PersonWithResumes> enrichPersonsWithResumes(Collection<Person> persons) {
 
-    List<Integer> perIds = persons.stream()
-        .map(Person::id)
-        .toList();
+    List<Integer> personIds = persons.stream()
+                                     .map(Person::id)
+                                     .toList();
 
-    Set<Resume> resumes = personService.findResumes(perIds);
+    Set<Resume> resumes = personService.findResumes(personIds);
 
-    Map<Integer, Set<Resume>> perResumesMapa = new HashMap<>();
+    Map<Integer, Set<Resume>> personResumesMapa = resumes.stream()
+        .collect(Collectors.groupingBy(Resume::personId, Collectors.toSet()));
 
-    for (var per : persons) {
-      var perId = per.id();
-      if (!perResumesMapa.containsKey(perId)) {
-        perResumesMapa.put(perId, new HashSet<>());
-      }
-    }
+    persons.forEach(person -> personResumesMapa.putIfAbsent(person.id(), new HashSet<>()));
 
-    for (var resume : resumes) {
-      var perId = resume.personId();
-      perResumesMapa.get(perId).add(resume);
-    }
+    return persons.stream()
+                  .map(person -> new PersonWithResumes(person, personResumesMapa.get(person.id())))
+                  .collect(Collectors.toSet());
 
-    Set<PersonWithResumes> personsWithResumes = new LinkedHashSet<>();
-
-    for (var per : persons) {
-      var perId = per.id();
-      LinkedHashSet<Resume> personResumes = null;
-      if (perResumesMapa.containsKey(perId))
-        personResumes = new LinkedHashSet<>(perResumesMapa.get(perId));
-      personsWithResumes.add(new PersonWithResumes(per, personResumes));
-    }
-    return personsWithResumes;
+    // дебажить это восьмое задание уже как смысл жизни (поэтому я был рад что то решение exception не выдавало)
   }
 }

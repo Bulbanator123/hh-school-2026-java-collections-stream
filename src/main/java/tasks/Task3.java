@@ -13,10 +13,9 @@ import java.util.List;
 public class Task3 {
 
   public static List<Person> sort(Collection<Person> persons) {
-    List<Person> sortedPersons = persons.stream()
+    return persons.stream()
         .sorted(Comparator.comparing(Person::secondName)
             .thenComparing(Person::firstName)
             .thenComparing(Person::createdAt)).toList();
-    return sortedPersons;
   }
 }

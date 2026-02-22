@@ -4,6 +4,7 @@ import common.Person;
 import common.PersonService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /*
 Задача 1
@@ -23,17 +24,13 @@ public class Task1 {
   public List<Person> findOrderedPersons(List<Integer> personIds) {
     Set<Person> persons = personService.findPersons(personIds);
 
-    Map<Integer, Person> personSort = new HashMap<>();;
+    Map<Integer, Person> personMap = persons.stream()
+                                            .collect(Collectors.toMap(Person::id,
+                                                               person -> person));
 
-    for (var per : persons) {
-      personSort.put(per.id(), per);
-    }
-
-    List<Person> personList = personIds.stream().
-        map(personSort::get)
-        .toList();
-
-    return personList;
+    return personIds.stream()
+                    .map(personMap::get)
+                    .toList();
 
     /*
        И наконец-то асимптотика
